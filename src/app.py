@@ -27,7 +27,6 @@ def sitemap():
 
 @app.route('/members', methods=['GET'])
 def handle_get_all():
-
     # this is how you can use the Family datastructure by calling its methods
     members = jackson_family.get_all_members()
 
@@ -36,35 +35,37 @@ def handle_get_all():
     else: 
         return 'Family not found', 400
 
-@app.route('/members/<int:id>', methods=['GET'])
+@app.route('/member/<int:id>', methods=['GET'])
 def handle_get_single(id):
     member = jackson_family.get_member(id)
-
-    if member: 
-        return jsonify(member), 200
-    else: 
+    if not member: 
         return 'Member not found', 400
+    else: 
+        return jsonify(member), 200
 
-@app.route('/members/<int:id>', methods=['DELETE'])
+@app.route('/member/<int:id>', methods=['DELETE'])
 def handle_delete_member(id):
     holder = jackson_family.get_member(id)
     member = jackson_family.delete_member(id)
 
     if member:
-        return jsonify(holder), 200
+        return jsonify({ "done" : True}), 200
     else:
         return 'Member not found', 400
 
-@app.route('/members', methods=['POST'])
+@app.route('/member', methods=['POST'])
 def handle_new_member():
-    new_member = request.get_json()
-    new_member["id"] = jackson_family._generateId()
+    body = request.get_json()
+    #body['id']=jackson_family._generateId()
+    if body['first_name'] != '' and body['age'] != '' and body['lucky_numbers'] != '':
 
-    if new_member["first_name"] != "" and new_member["age"] != "" and new_member["lucky_numbers"] != "":
-        member = jackson_family.add_member(new_member)
-        return jsonify(member), 200
-    else:
-        return 'Incomplete member', 400
+        if body['id'] == " ":
+            body['id']=jackson_family._generateId()
+
+        member = jackson_family.add_member(body)
+        return jsonify({}), 200
+    else: 
+        return 'Incomplete member', 400 
 
 
 

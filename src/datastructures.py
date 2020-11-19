@@ -40,6 +40,7 @@ class FamilyStructure:
 
     def add_member(self, member):
         # fill this method and update the return
+        #member['last_name']=self.last_name
         self._members.append(member)
         return member
 
@@ -52,9 +53,9 @@ class FamilyStructure:
 
     def get_member(self, id):
         # fill this method and update the return
-        for member in range(len(self._members)):
-            if self._members[member]["id"] == id:
-                return self._members
+        for member in self._members:
+            if member["id"] == id:
+                return member
 
     # this method is done, it returns a list with all the family members
     def get_all_members(self):
